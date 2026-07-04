@@ -1,0 +1,115 @@
+/* ==========================================
+   ESTILOS GENERALES Y TEMAS COQUETTE
+   ========================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle, #ffffff 10%, #66001c 100%);
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+
+body.tema-25mayo { background: radial-gradient(circle, #ffffff 10%, #457b9d 100%); }
+body.tema-sanvalentin { background: radial-gradient(circle, #ffffff 10%, #d90429 100%); }
+body.tema-niñez { background: radial-gradient(circle, #ffffff 10%, #ffb703 100%); }
+
+.wrapper-zona { width: 100%; display: flex; justify-content: center; }
+.oculto { display: none !important; }
+
+@keyframes sparkleGlow {
+    0% { box-shadow: 0 0 5px rgba(255, 182, 193, 0.4), inset 0 0 5px rgba(255,255,255,0.2); }
+    50% { box-shadow: 0 0 22px rgba(255, 105, 180, 0.9), inset 0 0 12px rgba(255,255,255,0.7); border-color: #ffb6c1 !important; }
+    100% { box-shadow: 0 0 5px rgba(255, 182, 193, 0.4), inset 0 0 5px rgba(255,255,255,0.2); }
+}
+
+/* LOADER */
+.loader-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; }
+.monio-giratorio { font-size: 70px; animation: girar 2s infinite ease-in-out; }
+@keyframes girar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.cargando-texto { margin-top: 15px; color: #66001c; font-weight: bold; }
+
+/* CONTENEDORES */
+.contenedor-principal, .tarjeta-sorteo { background: rgba(255, 255, 255, 0.96); padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); text-align: center; width: 100%; max-width: 450px; border: 1px solid rgba(255,255,255,0.5); }
+.img-premio { width: 100%; height: 220px; object-fit: cover; border-radius: 18px; margin-bottom: 15px; }
+.titulo-premio { color: #66001c; margin-bottom: 10px; font-size: 24px; }
+.cuenta-regresiva { background: #fff0f3; color: #c9184a; font-weight: bold; padding: 8px 15px; border-radius: 12px; margin-bottom: 15px; display: inline-block; font-size: 14px; }
+.info-precio { margin-bottom: 20px; color: #444; line-height: 1.6; }
+.footer-links { margin-top: 15px; }
+.link-terminos { font-size: 13px; color: #66001c; cursor: pointer; text-decoration: underline; font-weight: 500; }
+
+/* BOTONES COQUETTE UNIFICADOS */
+.btn-coquette {
+    background: #66001c; color: white; border: none; padding: 12px 24px; border-radius: 25px;
+    width: 100%; font-weight: bold; font-size: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(102, 0, 28, 0.3); transition: all 0.2s ease;
+}
+.btn-coquette:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(102, 0, 28, 0.4); filter: brightness(1.1); }
+.btn-coquette-alt { background: #ffffff; color: #66001c; border: 2px solid #66001c; padding: 8px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+.btn-coquette-alt:hover { background: #fff0f3; }
+.btn-coquette-clean { background: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 8px 14px; border-radius: 15px; font-weight: bold; font-size: 13px; cursor: pointer; }
+.btn-grabar-premium { background: #d90429; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 13px; cursor: pointer; }
+.btn-grabar-premium.grabando { animation: parpadeo 1s infinite alternate; background: #900b0b; }
+
+/* TECLADO / GRILLA DE TECLAS */
+.grilla-container-scroll { max-height: 280px; overflow-y: auto; background: #f8f9fa; padding: 12px; border-radius: 15px; margin: 15px 0; border: 1px solid #eee; }
+.grilla-numeros { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; }
+.celda-numero { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: #ffffff; font-weight: bold; border-radius: 8px; cursor: pointer; border: 1px solid #ddd; border-bottom: 4px solid #ccc; transition: all 0.1s ease; font-size: 14px; color: #444; }
+.celda-numero.seleccionado { background: #66001c !important; color: white !important; border-bottom: 4px solid #33000e; animation: sparkleGlow 1.4s infinite ease-in-out; }
+.celda-numero.comprado-rojo { background: #e9ecef !important; color: #ccc !important; cursor: not-allowed; border-bottom: 1px solid #ddd; }
+
+.btn-ayuda-indecisos { background: #fff0f3; color: #66001c; border: 2px dashed #66001c; width: 100%; padding: 12px; border-radius: 15px; font-weight: bold; cursor: pointer; }
+.card-combo-selector { background: #fffbfb; border: 1px solid #ffccd5; padding: 15px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left; }
+
+/* PANEL ADMIN */
+.wrapper-zona-admin { width: 100%; max-width: 820px; background: #66001c; padding: 25px; border-radius: 25px; color: white; box-shadow: 0 15px 40px rgba(0,0,0,0.35); }
+.header-admin { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+.nav-pestañas { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+.tab-btn { background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px 16px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 13px; white-space: nowrap; }
+.tab-btn.activa { background: white; color: #66001c; }
+
+/* DISEÑO DEFINITIVO DE LA RULETA */
+.ruleta-contenedor-visual {
+    position: relative; width: 220px; height: 220px; margin: 20px auto;
+}
+.ruleta-flecha {
+    position: absolute; top: -15px; left: 50%; transform: translateX(-50%); color: #ffb6c1; font-size: 24px; z-index: 10; text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.ruleta-circulo {
+    width: 100%; height: 100%; border-radius: 50%; border: 8px solid #ffffff;
+    background: conic-gradient(#66001c 0% 25%, #ffccd5 25% 50%, #b87333 50% 75%, #fff0f3 75% 100%);
+    position: relative; box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    transition: transform 3s cubic-bezier(0.1, 0.8, 0.1, 1);
+    display: flex; align-items: center; justify-content: center;
+}
+.ruleta-centro {
+    width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 5;
+}
+
+/* TABLAS Y FORMULARIOS */
+.tabla-admin { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; color: #333; border-radius: 12px; overflow: hidden; font-size: 14px; }
+.tabla-admin th { background: #f3eae5; color: #66001c; padding: 12px; text-align: left; }
+.tabla-admin td { padding: 12px; border-bottom: 1px solid #eee; }
+.formulario-admin input, .formulario-admin select { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.9); color: #333; }
+.formulario-admin label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: bold; color: #ffccd5; }
+
+.grid-caja { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
+.tarjeta-caja { padding: 20px; border-radius: 18px; text-align: center; color: #333; background: white; }
+.tarjeta-caja p { font-size: 24px; font-weight: bold; }
+
+/* MODALES */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1500; backdrop-filter: blur(3px); }
+.modal-contenido { background: white; padding: 25px; border-radius: 24px; width: 100%; max-width: 420px; color: #333; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; }
+.modal-ancho { max-width: 520px; }
+.btn-cerrar-moño { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 22px; cursor: pointer; }
+.formulario input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #ddd; }
+.formulario label { display: block; text-align: left; margin-bottom: 4px; font-weight: bold; font-size: 13px; color: #555; }
+
+#moñoSecretoAdmin {
+    position: fixed; bottom: 20px; right: 20px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(102, 0, 28, 0.2);
+    font-size: 24px; padding: 10px; border-radius: 50%; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 9999; transition: all 0.3s ease;
+}
+#moñoSecretoAdmin:hover { transform: scale(1.1); background: white; }

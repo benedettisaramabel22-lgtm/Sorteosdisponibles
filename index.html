@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteos Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- PANTALLA DE CARGA ESTÉTICA -->
+    <div id="pantallaCarga" class="loader-wrapper">
+        <div class="monio-giratorio">🎀</div>
+        <p class="cargando-texto">Cargando cositas lindas...</p>
+    </div>
+
+    <!-- Audios -->
+    <audio id="musicaFondo" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+    <audio id="sonidoClick" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav" preload="auto"></audio>
+
+    <!-- PANTALLA PÚBLICA DEL CLIENTE -->
+    <div id="zonaCliente" class="wrapper-zona oculto">
+        <div class="contenedor-principal" id="pantallaInicio">
+            <div class="emoji-bienvenida">🎐</div>
+            <h1 class="bienvenido-titulo">¡Bienvenido!</h1>
+            <p class="bienvenido-subtitulo">Descubrí los sorteos activos de esta semana. ¡Mucha suerte!</p>
+            <button class="btn-coquette" onclick="mostrarCatalogo()">🎟️ Ver sorteos disponibles</button>
+            <div class="footer-links">
+                <span class="link-terminos" onclick="abrirModal('modalTerminos')">📜 Términos y Condiciones</span>
+            </div>
+        </div>
+
+        <div class="seccion-sorteos oculto" id="seccionSorteos">
+            <div class="tarjeta-sorteo">
+                <img id="publicaImgPremio" src="https://images.unsplash.com/photo-1613274554329-70f997f5789f?w=500" alt="Premio" class="img-premio">
+                <h2 id="publicaTituloPremio" class="titulo-premio">Vasos de vidrio por 6</h2>
+                <div class="cuenta-regresiva">
+                    ⏳ Tiempo restante: <span id="temporizador">Cargando...</span>
+                </div>
+                <div class="info-precio">
+                    <p>💰 <strong>Precio por número:</strong> $500</p>
+                    <p>🔢 <strong>Números disponibles:</strong> <span id="numDisponibles">100</span> / <span id="numTotalesEtiqueta">100</span></p>
+                </div>
+                <button class="btn-coquette btn-comprar" onclick="abrirRegistro()">🛒 Comprar numerito</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL DE ADMINISTRACIÓN (SARA) -->
+    <div id="zonaAdmin" class="wrapper-zona-admin oculto">
+        <div class="header-admin">
+            <h2>🎀 Panel de Control - Sara</h2>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button id="btnGrabar" class="btn-grabar-premium" onclick="toggleGrabacion()">🔴 Grabar Sorteo</button>
+                <button class="btn-coquette-alt" onclick="salirPanelAdmin()">Cerrar Sesión 🚪</button>
+            </div>
+        </div>
+        
+        <div class="nav-pestañas">
+            <button class="tab-btn activa" id="btnTabNotif" onclick="cambiarPestaña('tabNotificaciones')">🔔 Notificaciones (<span id="badgeNotif">0</span>)</button>
+            <button class="tab-btn" onclick="cambiarPestaña('tabParticipantes')">👥 Participantes</button>
+            <button class="tab-btn" onclick="cambiarPestaña('tabRuleta')">🎡 La Ruleta</button>
+            <button class="tab-btn" onclick="cambiarPestaña('tabFinanzas')">💵 Cierre de Caja</button>
+            <button class="tab-btn" onclick="cambiarPestaña('tabNuevoSorteo')">✨ + Sorteo</button>
+            <button class="tab-btn" onclick="cambiarPestaña('tabConfiguracion')">⚙️ Config</button>
+        </div>
+
+        <!-- Pestaña 1: Notificaciones -->
+        <div id="tabNotificaciones" class="contenido-tab">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3>Bandeja de Entrada</h3>
+                <button class="btn-coquette-clean" onclick="ejecutarLiberacionMasiva()">🧹 Liberación Masiva</button>
+            </div>
+            <div id="listaNotificaciones" class="contenedor-notificaciones"></div>
+        </div>
+
+        <!-- Pestaña 2: Participantes -->
+        <div id="tabParticipantes" class="contenido-tab oculto">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3>Lista de Participantes Activos</h3>
+                <button class="btn-coquette-clean" onclick="copiarLinkDifusion()">📋 Compartir Link Sorteo</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="tabla-admin">
+                    <thead>
+                        <tr>
+                            <th>N° Tecla</th>
+                            <th>Nombre</th>
+                            <th>WhatsApp</th>
+                            <th>Dirección</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCuerpoParticipantes"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pestaña 3: La Ruleta (Corregida) -->
+        <div id="tabRuleta" class="contenido-tab oculto" style="text-align: center;">
+            <h3>Sorteo Aleatorio Oficial</h3>
+            <p style="font-size: 13px; color: #ffccd5; margin-bottom: 15px;">Girá la ruleta para elegir un ganador de la lista de aprobados</p>
+            <div class="ruleta-contenedor-visual">
+                <div class="ruleta-flecha">▼</div>
+                <div id="ruletaVisual" class="ruleta-circulo">
+                    <!-- Las porciones de colores estéticos se generan por CSS -->
+                    <div class="ruleta-centro">🎀</div>
+                </div>
+            </div>
+            <button id="btnGirarRuleta" class="btn-coquette" style="max-width: 250px; margin: 25px auto 0 auto;" onclick="girarRuletaGanador()">🎉 ¡GIRA RULETA!</button>
+        </div>
+
+        <!-- Pestaña 4: Cierre de Caja Automático -->
+        <div id="tabFinanzas" class="contenido-tab oculto">
+            <h3>📊 Resumen de Caja en Tiempo Real</h3>
+            <div class="grid-caja">
+                <div class="tarjeta-caja efectivo">
+                    <h4>💵 Efectivo OKAY</h4>
+                    <p>$<span id="cajaEfectivo">0</span></p>
+                </div>
+                <div class="tarjeta-caja transferencia">
+                    <h4>💳 Transferencia OKAY</h4>
+                    <p>$<span id="cajaTransferencia">0</span></p>
+                </div>
+                <div class="tarjeta-caja total">
+                    <h4>🎀 Total General</h4>
+                    <p>$<span id="cajaTotal">0</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestaña 5: Crear Sorteo -->
+        <div id="tabNuevoSorteo" class="contenido-tab oculto">
+            <h3>Cargar Sorteo Semanal</h3>
+            <div class="formulario-admin">
+                <label>🎉 Temática / Fecha Especial:</label>
+                <select id="crearTematica" class="select-admin">
+                    <option value="normal">Estándar (Coquette Tradicional) 🎀</option>
+                    <option value="25mayo">25 de Mayo 🇦🇷</option>
+                    <option value="padre">Día del Padre 👨‍👦</option>
+                    <option value="madre">Día del Madre 👩‍👦</option>
+                    <option value="amistad">Día de la Amistad 🫂</option>
+                    <option value="sanvalentin">San Valentin ❤️</option>
+                    <option value="niñez">Día de la Niñez 🧸</option>
+                </select>
+
+                <label>🎁 Nombre del Premio:</label>
+                <input type="text" id="crearTitulo" placeholder="Ej: Set Matero Rosa">
+                <label>🖼️ URL de la Imagen:</label>
+                <input type="text" id="crearImgUrl" value="https://images.unsplash.com/photo-1613274554329-70f997f5789f?w=500">
+                <label>🔢 Cantidad de Números:</label>
+                <input type="number" id="crearMaxNumeros" value="100">
+                <label>⏱️ Horas de duración:</label>
+                <input type="number" id="crearHorasDuracion" value="48">
+
+                <h4 style="margin-top: 15px; color: #ffccd5; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 5px;">⚙️ Configuración de Combos</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Nombre Combo 1:</label>
+                        <input type="text" id="combo1Nombre" value="✨ Combo Suerte">
+                        <label>Teclas:</label>
+                        <input type="number" id="combo1Cant" value="3">
+                        <label>Precio Final:</label>
+                        <input type="number" id="combo1Precio" value="1200">
+                    </div>
+                    <div>
+                        <label>Nombre Combo 2:</label>
+                        <input type="text" id="combo2Nombre" value="👑 Combo Rey/Reina">
+                        <label>Teclas:</label>
+                        <input type="number" id="combo2Cant" value="5">
+                        <label>Precio Final:</label>
+                        <input type="number" id="combo2Precio" value="2000">
+                    </div>
+                </div>
+                
+                <button class="btn-coquette" style="background:#2b9348; margin-top:20px;" onclick="crearNuevoSorteoDesdeAdmin()">✨ Publicar Sorteo</button>
+            </div>
+        </div>
+
+        <!-- Nueva Pestaña 6: Configuración de Sonido y Sala -->
+        <div id="tabConfiguracion" class="contenido-tab oculto">
+            <h3>⚙️ Configuración de la Sala</h3>
+            <div class="formulario-admin" style="margin-top: 15px;">
+                <label>🔊 Volumen de la Sala (Música y Efectos):</label>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <i class="fa-solid fa-volume-low"></i>
+                    <input type="range" id="sliderVolumen" min="0" max="1" step="0.1" value="0.5" style="margin:0;" oninput="cambiarVolumenSala(this.value)">
+                    <i class="fa-solid fa-volume-high"></i>
+                </div>
+
+                <label>🎵 Cambiar Música de Fondo (Pegar URL de Audio):</label>
+                <input type="text" id="inputUrlMusica" placeholder="https://enlace-de-tu-audio.mp3" style="margin-bottom: 5px;">
+                <p style="font-size: 11px; color:#ffccd5; margin-bottom: 15px;">Podés usar enlaces directos .mp3 para ambientar tu sala.</p>
+                <button class="btn-coquette" onclick="actualizarMusicaSala()">🎵 Aplicar Nueva Música</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SELECCIÓN DE NÚMEROS Y COMBOS -->
+    <div class="modal oculto" id="modalNumeros">
+        <div class="modal-contenido modal-ancho">
+            <button class="btn-cerrar-moño" onclick="cerrarModal('modalNumeros')">🎀</button>
+            <h3>Elegí tus números</h3>
+            
+            <div class="seccion-combos-bloque">
+                <button class="btn-ayuda-indecisos" onclick="abrirModal('modalCombosAux')">🤔 ¿Estás indecis@? ¡Te ayudamos!</button>
+            </div>
+
+            <div class="grilla-container-scroll">
+                <div class="grilla-numeros" id="contenedorGrilla"></div>
+            </div>
+            <div class="resumen-seleccion">
+                <p>📑 <strong>Teclas seleccionadas:</strong> <span id="txtSeleccionados">Ninguno</span></p>
+                <p>💸 <strong>Total provisorio:</strong> $<span id="txtTotalProvisorio">0</span></p>
+            </div>
+            <button class="btn-coquette" onclick="irAlPago()">🛍️ Comprar números</button>
+        </div>
+    </div>
+
+    <!-- MODAL COMBOS AUXILIAR -->
+    <div class="modal oculto" id="modalCombosAux">
+        <div class="modal-contenido">
+            <button class="btn-cerrar-moño" onclick="cerrarModal('modalCombosAux')">🎀</button>
+            <h3>Combos Sugeridos ✨</h3>
+            <p class="instruccion">Elegí una opción y el sistema elegirá tus teclas al azar al instante.</p>
+            <div id="cuerpoCombosCliente"></div>
+        </div>
+    </div>
+
+    <!-- MODAL PAGO -->
+    <div class="modal oculto" id="modalPago">
+        <div class="modal-contenido">
+            <button class="btn-cerrar-moño" onclick="cerrarModal('modalPago')">🎀</button>
+            <h3>Forma de Pago</h3>
+            <div class="caja-pago">
+                <p>💰 <strong>Total a pagar:</strong> $<span id="txtTotalFinal">0</span></p>
+                <hr style="margin:10px 0; opacity:0.2;">
+                <p><strong>Opción 1: Transferencia</strong></p>
+                <p>💳 <strong>Alias:</strong> <span class="resaltado" id="aliasTexto">sara.344.fuga.mp</span> <button class="btn-coquette-clean" style="display:inline-block; width:auto; padding:3px 8px; font-size:11px;" onclick="copiarAlias()">📋 Copiar</button></p>
+                <button class="btn-coquette" style="margin-top:15px; background:#25d366;" onclick="abrirWhatsappFlujo('transferencia')">🟢 Mandar Comprobante</button>
+            </div>
+            <div class="caja-pago-efectivo" style="margin-top: 15px;">
+                <p><strong>Opción 2: Pago en Efectivo 💵</strong></p>
+                <button class="btn-coquette" style="background:#800020; margin-top:5px;" onclick="abrirWhatsappFlujo('efectivo')">📱 Arreglar Efectivo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TÉRMINOS Y CONDICIONES (Acodado y Oficial) -->
+    <div class="modal oculto" id="modalTerminos">
+        <div class="modal-contenido" style="text-align: left;">
+            <button class="btn-cerrar-moño" style="right: 12px; left: auto;" onclick="cerrarModal('modalTerminos')">🎀</button>
+            <h3 style="text-align: center; margin-bottom: 15px; color: #66001c;">Términos y Condiciones</h3>
+            <div style="max-height: 300px; overflow-y: auto; padding-right: 5px; font-size: 13px; line-height: 1.5; color: #444;">
+                <p style="margin-bottom: 10px;"><strong>1. Plazo de Pago y Reserva:</strong> Al seleccionar y reservar tus números, disponés de un tiempo máximo para enviar el comprobante de pago. Pasado ese tiempo, las teclas se liberarán automáticamente.</p>
+                <p style="margin-bottom: 10px;"><strong>2. Validación Oficial:</strong> La compra de tu número solo será válida una vez que la administración verifique el ingreso del dinero y apruebe tu estado en el sistema.</p>
+                <p style="margin-bottom: 10px;"><strong>3. Reclamo del Premio:</strong> Una vez finalizado el contador del sorteo y anunciado el ganador por la ruleta oficial, el beneficiario tendrá 48 horas para reclamar su premio. De lo contrario, se procederá a un nuevo sorteo.</p>
+                <p style="margin-bottom: 10px;"><strong>4. Cancelación o Prórroga:</strong> La organización se reserva el derecho de extender la duración del sorteo si no se alcanza un mínimo de números vendidos necesarios para cubrir el costo del premio.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL REGISTRO -->
+    <div class="modal oculto" id="modalRegistro">
+        <div class="modal-contenido">
+            <button class="btn-cerrar-moño" onclick="cerrarModal('modalRegistro')">🎀</button>
+            <h3>Registrarse</h3>
+            <div class="formulario">
+                <label>Nombre:</label><input type="text" id="regNombre" placeholder="Tu nombre">
+                <label>Apellido:</label><input type="text" id="regApellido" placeholder="Tu apellido">
+                <label>Dirección:</label><input type="text" id="regDireccion" placeholder="Tu dirección">
+                <label>Teléfono:</label><input type="tel" id="regTelefono" placeholder="WhatsApp">
+                <button class="btn-coquette" onclick="guardarRegistroYContinuar()">Continuar ➡️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LOGIN ADMIN -->
+    <div class="modal oculto" id="modalLoginAdmin">
+        <div class="modal-contenido">
+            <button class="btn-cerrar-moño" onclick="cerrarModal('modalLoginAdmin')">🎀</button>
+            <h3>Ingreso Administrativo</h3>
+            <div class="formulario">
+                <input type="text" id="adminUser" placeholder="Usuario">
+                <input type="password" id="adminPass" placeholder="Contraseña">
+                <button class="btn-coquette" onclick="intentarLoginAdmin()">Ingresar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GANADOR -->
+    <div class="modal oculto" id="modalGanador">
+        <div class="modal-contenido" style="text-align: center; border: 4px solid #66001c;">
+            <button class="btn-cerrar-moño" onclick="cerrarModal('modalGanador')">🎀</button>
+            <h2 style="color: #66001c; font-size: 28px;">¡GANADOR! 🥳🎉</h2>
+            <div id="cuerpoGanador" style="font-size: 18px; margin: 20px 0; font-weight: bold; color:#333;"></div>
+        </div>
+    </div>
+
+    <!-- BOTÓN DE ACCESO AL PANEL -->
+    <button id="moñoSecretoAdmin" onclick="abrirLoginAdmin()" title="Acceso Admin">🎀</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
